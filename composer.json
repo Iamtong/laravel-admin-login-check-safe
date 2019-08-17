@@ -1,5 +1,5 @@
 {
-    "name": "iamtong/login-check-safe",
+    "name": "iamtong/laravel-admin-login-check-safe",
     "description": "登录添加验证码，后台用户锁定，错误次数过多锁定，密码强制修改，添加密码修改记录，登录日志",
     "type": "library",
     "keywords": ["laravel-admin", "extension", "login-check-safe"],
