@@ -1,5 +1,5 @@
 #laravel-admin extension
-## login-check-safe
+## laravel-admin-login-check-safe
 ###### 填加以下内容
 * 登录验证码
 * 登录达到配置次数，禁止登录一段时间（可配置）
@@ -16,6 +16,7 @@
 composer require iamtong/laravel-admin-login-check-safe
 php artisan vendor:publish --provider=Encore\LoginCheckSafe\LoginCheckSafeServiceProvider
 ```
+
 
 * 需要修改 config/admin.php
 extensions里面添加
