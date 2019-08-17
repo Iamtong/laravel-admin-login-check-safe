@@ -13,7 +13,7 @@
 * 在项目目录执行以下命令
 
 ```shell script
-composer require iamtong/login-check-safe
+composer require iamtong/laravel-admin-login-check-safe
 php artisan vendor:publish --provider=Encore\LoginCheckSafe\LoginCheckSafeServiceProvider
 ```
 
