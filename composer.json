@@ -3,11 +3,11 @@
     "description": "登录添加验证码，后台用户锁定，错误次数过多锁定，密码强制修改",
     "type": "library",
     "keywords": ["laravel-admin", "extension"],
-    "homepage": "https://github.com/laravel-admin-ext/login-check-safe",
+    "homepage": "https://github.com/Iamtong/laravel-admin-login-check-safe",
     "license": "MIT",
     "authors": [
         {
-            "name": "Tong",
+            "name": "Iamtong",
             "email": "jiantong912@163.com"
         }
     ],
