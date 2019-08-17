@@ -32,7 +32,7 @@ class LoginCheckSafeServiceProvider extends ServiceProvider
             [
                 //$extension->assets() => public_path('vendor/laravel-admin-ext/login-check-safe'),
                 $extension->migrations() => database_path('migrations'),
-                __DIR__.'/../resources/lang/' => resource_path('lang'),
+                //__DIR__.'/../resources/lang/' => resource_path('lang'),
                 __DIR__.'/../resources/lang/en/validation.php' => resource_path('lang/en/validation.php'),
                 __DIR__.'/../resources/lang/en/admins.php' => resource_path('lang/en/admins.php'),
                 __DIR__.'/../resources/lang/zh-CN/admins.php' => resource_path('lang/zh-CN/admins.php'),
