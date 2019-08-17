@@ -1,0 +1,35 @@
+{
+    "name": "laravel-admin-ext/login-check-safe",
+    "description": "登录添加验证码，后台用户锁定，错误次数过多锁定，密码强制修改",
+    "type": "library",
+    "keywords": ["laravel-admin", "extension"],
+    "homepage": "https://github.com/laravel-admin-ext/login-check-safe",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tong",
+            "email": "jiantong912@163.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "encore/laravel-admin": "~1.6",
+        "mews/captcha": "^2.2",
+        "predis/predis": "^1.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Encore\\LoginCheckSafe\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Encore\\LoginCheckSafe\\LoginCheckSafeServiceProvider"
+            ]
+        }
+    }
+}
