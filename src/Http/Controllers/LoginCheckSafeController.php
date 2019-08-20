@@ -94,9 +94,9 @@ class LoginCheckSafeController extends Controller
             Cache::forget($this->_login_error_no_login_cache_key.$user->id);
             // 当密码有效期还在7天内时，进行登录成功后的提示。
             $other = '';
-            $left_day = Carbon::createFromTimestamp($pass_expried_time+now()->timestamp)->diffForHumans();
+            $left_day = Carbon::createFromTimestamp($pass_expried_time+now()->timestamp)->diffForHumans(['parts'=>2]);
             if(ceil($pass_expried_time/86400)<=7){
-                $other = "您的密码将在 {$left_day} 过期，请该尽快修改密码";
+                $other = trans("admins.password_expired",['num'=>$left_day]);
             }
             LoginLogModel::create([
                 'user_id' => $user->id,
@@ -173,7 +173,7 @@ class LoginCheckSafeController extends Controller
         );
         $pass_expried_time = config('admin.extensions.login-check-safe.password-expired',2592000) - (now()->timestamp - strtotime(Admin::user()->pass_update_at));
         $pass_day = ceil($pass_expried_time/86400);
-        $left_day = Carbon::createFromTimestamp($pass_expried_time+now()->timestamp)->diffForHumans();
+        $left_day = Carbon::createFromTimestamp($pass_expried_time+now()->timestamp)->diffForHumans(['parts'=>3]);
         $msg = trans("admins.password_expired",['num'=>$left_day]);
 
         return $content
