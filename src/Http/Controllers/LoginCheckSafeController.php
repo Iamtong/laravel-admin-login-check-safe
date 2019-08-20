@@ -83,8 +83,6 @@ class LoginCheckSafeController extends Controller
             ]);
             return Redirect::back()->withInput()->withErrors(['password' => trans('auth.errorTooMuch',['num'=>$limit_num,'min'=>ceil($diff_time/60)])]);
         }
-        //var_dump($credentials);
-        //var_dump(Auth::guard('admin')->attempt($credentials));
         if (Auth::guard('admin')->attempt($credentials)) {
             //登录成功清楚错误次数信息
             Cache::forget($this->_login_error_num_cache_key.$user->id);
@@ -109,10 +107,10 @@ class LoginCheckSafeController extends Controller
         }else{
             //密码错误次数
             //如果错误有效时间还大于当前时间，直接自增错误次数
-            //var_dump(Cache::get($this->_login_error_no_login_cache_key.$user->id));
             if(Cache::get($this->_login_error_no_login_cache_key.$user->id)>now()->timestamp){
                 $num = Cache::increment($this->_login_error_num_cache_key.$user->id,1);
-            }else{//如果错误有效时间还小于当前时间，直接重置错误次数
+            }else{
+                //如果错误有效时间还小于当前时间，直接重置错误次数
                 $num = 1;
                 Cache::set($this->_login_error_num_cache_key.$user->id,$num);
             }
@@ -198,13 +196,7 @@ class LoginCheckSafeController extends Controller
         $form->text('name', trans('admin.name'))->rules('required');
         $form->image('avatar', trans('admin.avatar'));
 
-        /*$form->password('password', trans('admin.password'))->rules(['required','confirmed','between:'.$passLength,new AdminPassword(),new AdminPasswordUsed(Admin::user()->id)]);
-
-
-        $form->password('password_confirmation', trans('admin.password_confirmation'))->rules('required')
-            ->default(function ($form) {
-                return $form->model()->password;
-            });*/
+        //修正重置密码的方式
         $form->divider();
         $form->password('new_password', trans('admins.new_password'))->rules(['confirmed',new AdminPassword(),new AdminPasswordUsed(Admin::user()->id)])->default('');
         $form->password('new_password_confirmation', trans('admin.password_confirmation'))->rules('')->default('');

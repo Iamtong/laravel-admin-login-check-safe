@@ -115,10 +115,9 @@ class UserController extends Controller
         $grid->login_at(trans('admins.login_at'));
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             $actions->disableDelete();
+            //添加两个日志链接
             $actions->add(new LogLoginView());
             $actions->add(new LogPassView());
-            //$actions->append();
-            //$actions->append('<a href=""><i class="fa fa-eye">密码修改日志</i></a>');
 
         });
 
