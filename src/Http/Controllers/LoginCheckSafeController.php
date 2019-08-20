@@ -181,11 +181,11 @@ class LoginCheckSafeController extends Controller
             ->row(function (Row $row) use ($msg,$pass_day) {
                 if($pass_day<10) {
                     $row->column(12, function (Column $column) use ($msg) {
-                        $column->append((new Widgets\Alert($msg))->style('warning')->icon('user'));
+                        $column->append((new Alert($msg))->style('warning')->icon('user'));
                     });
                 }else{
                     $row->column(12, function (Column $column) use ($msg) {
-                        $column->append((new Widgets\Alert($msg))->style('info')->icon('info'));
+                        $column->append((new Alert($msg))->style('info')->icon('info'));
                     });
                 }
             })
