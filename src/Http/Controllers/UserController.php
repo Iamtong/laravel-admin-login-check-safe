@@ -2,6 +2,7 @@
 
 namespace Encore\LoginCheckSafe\Http\Controllers;
 
+use Encore\Admin\Facades\Admin;
 use Encore\LoginCheckSafe\Actions\Post\LogLoginView;
 use Encore\LoginCheckSafe\Actions\Post\LogPassView;
 use Encore\LoginCheckSafe\Models\PasswordLogModel;
@@ -12,6 +13,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Route;
 
 class UserController extends Controller
 {
@@ -182,29 +184,19 @@ class UserController extends Controller
             $tools->disableDelete();
         });
         $form->display('id', 'ID');
-        if(\Route::currentRouteNamed('*edit*')){
+        $id = request()->route()->parameter('user');
+        if($id){
             $form->display('username', trans('admin.username'));
         }else{
             $rules = 'required|unique:'.$connect.'.'.$userTable;
             if(config('admin.extensions.login-check-safe.username-rules')){
-                $rules .= config('admin.extensions.login-check-safe.username-rules');
+                $rules .= '|'.config('admin.extensions.login-check-safe.username-rules');
             }
             $form->text('username', trans('admin.username'))->rules($rules,config('admin.extensions.login-check-safe.username-rules-msg'));
         }
 
         $form->text('name', trans('admin.name'))->rules('required');
         $form->image('avatar', trans('admin.avatar'))->uniqueName();
-        $passLength = '10,70';
-        if(config('admin.extensions.login-check-safe.password-length')){
-            $passLength = config('admin.extensions.login-check-safe.password-length');
-        }
-        $form->password('password', trans('admin.password'))->rules(['required','confirmed','between:'.$passLength,new AdminPassword()]);
-        $form->password('password_confirmation', trans('admin.password_confirmation'))->rules('required')
-            ->default(function ($form) {
-                return $form->model()->password;
-            });
-
-        $form->ignore(['password_confirmation']);
 
         $form->multipleSelect('roles', trans('admin.roles'))->options($roleModel::all()->pluck('name', 'id'));
         $form->multipleSelect('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
@@ -216,30 +208,42 @@ class UserController extends Controller
 
         $form->display('created_at', trans('admin.created_at'));
         $form->display('updated_at', trans('admin.updated_at'));
-        if(\Route::currentRouteNamed('*edit*')){
-            $form->display('pass_update_at', trans('admins.pass_update_at'))->default('');
-        }
         $form->hidden('passwordmd5');
         $form->hidden('pass_update_at');
+
+        if($id){
+            $form->divider();
+            $form->hidden('password');
+            $form->password('new_password', trans('admins.new_password'))->rules(['confirmed', new AdminPassword()]);
+            $form->password('new_password_confirmation', trans('admin.password_confirmation'))->default('');
+            $form->ignore(['password']);
+        }else{
+            $form->password('password', trans('admin.password'))->rules(['required', 'confirmed', new AdminPassword()]);
+            $form->password('password_confirmation', trans('admin.password_confirmation'))->rules('required');
+        }
+
+
+        $form->ignore(['password_confirmation','passwordmd5','pass_update_at','new_password','new_password_confirmation']);
         $form->saving(function (Form $form) {
-            if ($form->password && $form->model()->password != $form->password) {
-                $form->passwordmd5 = md5(config('app.key').$form->password);
-                $form->password = bcrypt($form->password);
+            //更新前处理
+            $new_password = request()->input('new_password')?:$form->password;//新密码
+            if ($new_password) {
+                $form->passwordmd5 = md5(config('app.key').$new_password);
+                $form->password = bcrypt($new_password);
                 $form->pass_update_at = now()->toDateTimeString();
-            }else{
-                $form->ignore(['passwordmd5','pass_update_at']);
             }
         });
         $form->saved(function (Form $form){
-            if($form->pass_update_at&&strtotime($form->pass_update_at)==now()->timestamp){
+            if($form->passwordmd5){
                 //查询最近是否使用过
                 $passdata = [
                     'user_id' => $form->model()->id,
                     'password' => $form->model()->passwordmd5,
+                    'remark' => trans('admins.sys_reset_password',['user'=>Admin::user()->username]),
                 ];
+                //var_dump($passdata);exit();
                 PasswordLogModel::create($passdata);
             }
-
         });
         //var_dump($form);exit;
         return $form;

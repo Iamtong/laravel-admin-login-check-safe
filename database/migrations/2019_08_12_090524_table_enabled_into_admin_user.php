@@ -29,6 +29,7 @@ class TableEnabledIntoAdminUser extends Migration
             $table->increments('id');
             $table->integer('user_id')->comment('用户ID');
             $table->string('password','32')->comment('修改过的密码MD5');
+            $table->string('remark','128')->comment('备注');
             $table->timestamps();
             $table->index('user_id');
             $table->index('updated_at');

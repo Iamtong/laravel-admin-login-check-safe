@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PasswordLogModel extends Model
 {
-    protected $fillable = ['user_id', 'password', 'updated_at'];
+    protected $fillable = ['user_id', 'password', 'updated_at', 'remark'];
     /**
      * Create a new Eloquent model instance.
      *

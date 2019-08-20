@@ -38,6 +38,7 @@ class LogPassController extends Controller
         $grid->column('id', 'ID')->sortable();
         $grid->column('user.username', trans('admin.username'));
         $grid->column('user.name', trans('admin.name'));
+        $grid->column('remark', trans('admins.remark'));
         $grid->column('updated_at', trans('admin.updated_at'));
         $grid->disableActions();
 

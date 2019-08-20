@@ -17,5 +17,8 @@ return [
     'new_password'          => '新密码',
     'old_password_empty'    => '请填写原密码',
     'old_password_wrong'    => '原密码错误',
-    'password_expired'      => '您的密码将在 :num 过期，请在到期之前修改密码'
+    'password_expired'      => '您的密码将在 :num 过期，请在到期之前修改密码',
+
+    'remark'                => '备注',
+    'sys_reset_password'    => '管理员： :user 重置密码',
 ];
