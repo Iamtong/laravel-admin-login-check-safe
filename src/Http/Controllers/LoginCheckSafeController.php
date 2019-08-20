@@ -61,10 +61,9 @@ class LoginCheckSafeController extends Controller
             ]);
             return Redirect::back()->withInput()->withErrors(['username' => trans('auth.admindisabled')]);
         }
-        //密码过期时间
-        $pass_expried_time = config('admin.extensions.login-check-safe.password-expired') - (now()->timestamp - strtotime($user->pass_update_at));
-        //var_dump($pass_expried_time/86400);exit();
-        if($user->pass_update_at&&$pass_expried_time<=0){
+        //密码过期时间,密码过期验证，排除账号ID为1的用户；
+        $pass_expried_time = config('admin.extensions.login-check-safe.password-expired',2592000) - (now()->timestamp - strtotime($user->pass_update_at));
+        if($user->pass_update_at&&$pass_expried_time<=0&&$user->id!=1){
             LoginLogModel::create([
                 'user_id' => $user->id,
                 'state' => 0,
@@ -72,9 +71,8 @@ class LoginCheckSafeController extends Controller
             ]);
             return Redirect::back()->withInput()->withErrors(['password' => trans('auth.adminPassExpried')]);
         }
-        //var_dump($user->id);exit();
         //当错误次数达到限制次数并且还在锁定时间期限内，直接返回锁定提示
-        $limit_num = config('admin.extensions.login-check-safe.login-error-num');
+        $limit_num = config('admin.extensions.login-check-safe.login-error-num',5);
         $can_login_time = Cache::get($this->_login_error_no_login_cache_key.$user->id);
         $diff_time = $can_login_time - now()->timestamp;
         if($diff_time>0&&Cache::get($this->_login_error_num_cache_key.$user->id)>=$limit_num){
@@ -119,7 +117,7 @@ class LoginCheckSafeController extends Controller
                 Cache::set($this->_login_error_num_cache_key.$user->id,$num);
             }
             //当错误次数达到限制次数直接返回锁定提示
-            $limit_sec = config('admin.extensions.login-check-safe.login-error-limit-sec');
+            $limit_sec = config('admin.extensions.login-check-safe.login-error-limit-sec',600);
             if($limit_num-$num<=0){
                 LoginLogModel::create([
                     'user_id' => $user->id,

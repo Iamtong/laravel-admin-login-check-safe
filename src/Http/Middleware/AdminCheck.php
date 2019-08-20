@@ -28,7 +28,7 @@ class AdminCheck
             }
 
             //验证验证活跃时长
-            $time_length = config('admin.extensions.login-check-safe.auto-out-sec')+$request->session()->get('admin_check.time')-now()->timestamp;
+            $time_length = config('admin.extensions.login-check-safe.auto-out-sec',1800)+$request->session()->get('admin_check.time')-now()->timestamp;
             if($time_length<0){
                 return $this->loginOut($request,trans('auth.admin_overtime'));
             }else{

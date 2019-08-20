@@ -25,9 +25,23 @@ class UserController extends Controller
      */
     public function index(Content $content)
     {
+        $pass_expried_time = config('admin.extensions.login-check-safe.password-expired',2592000) - (now()->timestamp - strtotime(Admin::user()->pass_update_at));
+        $pass_day = ceil($pass_expried_time/86400);
+        $left_day = Carbon::createFromTimestamp($pass_expried_time+now()->timestamp)->diffForHumans();
+        $msg = trans("admins.password_expired",['num'=>$left_day]);
         return $content
             ->header(trans('admin.administrator'))
-            ->description(trans('admin.list'))
+            ->description(trans('admin.list'))->row(function (Row $row) use ($msg,$pass_day) {
+                if($pass_day<10) {
+                    $row->column(12, function (Column $column) use ($msg) {
+                        $column->append((new Widgets\Alert($msg))->style('warning')->icon('user'));
+                    });
+                }else{
+                    $row->column(12, function (Column $column) use ($msg) {
+                        $column->append((new Widgets\Alert($msg))->style('info')->icon('info'));
+                    });
+                }
+            })
             ->body($this->grid());
     }
 
