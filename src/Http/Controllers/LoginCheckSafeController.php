@@ -6,8 +6,11 @@ use Carbon\Carbon;
 use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
+use Encore\Admin\Layout\Column;
 use Encore\Admin\Layout\Content;
+use Encore\Admin\Layout\Row;
 use Encore\Admin\Middleware\Session;
+use Encore\Admin\Widgets\Alert;
 use Encore\LoginCheckSafe\Models\LoginLogModel;
 use Encore\LoginCheckSafe\Models\PasswordLogModel;
 use Encore\LoginCheckSafe\Rules\AdminPassword;
@@ -20,6 +23,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Cache;
+
+
 
 class LoginCheckSafeController extends Controller
 {
@@ -63,7 +68,7 @@ class LoginCheckSafeController extends Controller
         }
         //密码过期时间,密码过期验证，排除账号ID为1的用户；
         $pass_expried_time = config('admin.extensions.login-check-safe.password-expired',2592000) - (now()->timestamp - strtotime($user->pass_update_at));
-        if($user->pass_update_at&&$pass_expried_time<=0&&$user->id!=1){
+        if($user->pass_update_at&&$pass_expried_time<=0&&!in_array($user->username, config('admin.extensions.login-check-safe.password-expired-except-name',[]))){
             LoginLogModel::create([
                 'user_id' => $user->id,
                 'state' => 0,
