@@ -22,7 +22,7 @@ class AdminCheck
                 return $this->loginOut($request,trans('auth.admindisabled'));
             }
 
-            if(config('admin.extensions.login-check-safe.limit_one_login')===true){
+            if(config('admin.extensions.login-check-safe.limit-one-login')===true){
                 //验证账号是否在其他地方登录
                 if(md5(Admin::user()->id.Admin::user()->login_at)!==$request->session()->get('admin_check.key')){
                     return $this->loginOut($request,trans('auth.admin_other_login'));

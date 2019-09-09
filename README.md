@@ -30,7 +30,7 @@ extensions里面添加
             'password-expired' => 90*86400,//密码过期时间 90 天（单位秒）
             'password-expired-except-name' => ['admin'],//排除账号不验证密码过期
             'auto-out-sec' => 1800,//多久没活跃后，自动退出账号（单位秒），设置为0时，表示不开启此功能
-            'limit_one_login' => true,//是否开启 限制同时间一个账号仅限一人登录
+            'limit-one-login' => true,//是否开启 限制同时间一个账号仅限一人登录
             'username-rules' => 'regex:/^[a-zA-Z0-9]+$/i|between:3,40',//用户名除了唯一性和必须填写之外的所有规则
             'username-rules-msg' => [
                 'regex' => '用户名必须以大小写字母和数字组成',
