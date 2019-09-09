@@ -22,18 +22,22 @@ class AdminCheck
                 return $this->loginOut($request,trans('auth.admindisabled'));
             }
 
-            //验证账号是否在其他地方登录
-            if(md5(Admin::user()->id.Admin::user()->login_at)!==$request->session()->get('admin_check.key')){
-                return $this->loginOut($request,trans('auth.admin_other_login'));
+            if(config('admin.extensions.login-check-safe.limit_one_login')===true){
+                //验证账号是否在其他地方登录
+                if(md5(Admin::user()->id.Admin::user()->login_at)!==$request->session()->get('admin_check.key')){
+                    return $this->loginOut($request,trans('auth.admin_other_login'));
+                }
             }
 
-            //验证验证活跃时长
-            $time_length = config('admin.extensions.login-check-safe.auto-out-sec',1800)+$request->session()->get('admin_check.time')-now()->timestamp;
-            if($time_length<0){
-                return $this->loginOut($request,trans('auth.admin_overtime'));
-            }else{
-                $request->session()->put('admin_check.time',now()->timestamp);
+            //验证验证活跃时长,只有当配置的时候才开启，判断
+            if (config('admin.extensions.login-check-safe.auto-out-sec')&&config('admin.extensions.login-check-safe.auto-out-sec')>0){
+                $time_length = config('admin.extensions.login-check-safe.auto-out-sec')+$request->session()->get('admin_check.time')-now()->timestamp;
+                if($time_length<0){
+                    return $this->loginOut($request,trans('auth.admin_overtime'));
+                }
             }
+            $request->session()->put('admin_check.time',now()->timestamp);
+
         }
 
 

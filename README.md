@@ -29,13 +29,14 @@ extensions里面添加
             'login-error-limit-sec' => 600,//达到错误次数后锁定的时间（单位秒）
             'password-expired' => 90*86400,//密码过期时间 90 天（单位秒）
             'password-expired-except-name' => ['admin'],//排除账号不验证密码过期
-            'auto-out-sec' => 1800,//多久没活跃后，自动退出账号（单位秒）
-            'username-rules' => 'regex:/^[a-zA-Z0-9]+$/i|between:4,40',//用户名除了唯一性和必须填写之外的所有规则
+            'auto-out-sec' => 1800,//多久没活跃后，自动退出账号（单位秒），设置为0时，表示不开启此功能
+            'limit_one_login' => true,//是否开启 限制同时间一个账号仅限一人登录
+            'username-rules' => 'regex:/^[a-zA-Z0-9]+$/i|between:3,40',//用户名除了唯一性和必须填写之外的所有规则
             'username-rules-msg' => [
                 'regex' => '用户名必须以大小写字母和数字组成',
             ],//对应的提示方法
-            'password-strong' => 2,// 【大写字母 小写字母 数字 特殊字符】 密码强度 必须使用其中的几种。
-            'password-length' => '8,40',//密码长度范围 10,40 10到40位；
+            'password-strong' => 1,// 【大写字母 小写字母 数字 特殊字符】 密码强度 必须使用其中的几种。
+            'password-length' => '6,40',//密码长度范围 10,40 10到40位；
             'db' => [
                 //密码修改纪录表
                 'password_log_table' => 'admin_password_log',
