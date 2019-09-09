@@ -72,13 +72,20 @@
                         $('img[class="captcha"]').attr('src','{{ captcha_src('admin') }}'+Math.random());
                     }
                 </script>
-                <div class="row">
-
-                    <!-- /.col -->
-                    <div class="col-xs-4 col-md-offset-4">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">{{ trans('admin.login') }}</button>
-                    </div>
+                <div class="col-xs-8">
+                    @if(config('admin.auth.remember'))
+                        <div class="checkbox icheck">
+                            <label>
+                                <input type="checkbox" name="remember" value="1" {{ (!old('username') || old('remember')) ? 'checked' : '' }}>
+                                {{ trans('admin.remember_me') }}
+                            </label>
+                        </div>
+                    @endif
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4 col-md-offset-4">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">{{ trans('admin.login') }}</button>
                 </div>
         </form>
     </div>
